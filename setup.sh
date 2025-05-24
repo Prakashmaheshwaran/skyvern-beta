@@ -398,7 +398,10 @@ main() {
     choose_python_version_or_fail
     remove_poetry_env
     install_dependencies
-    setup_postgresql
+    # Set USE_POSTGRES=true if you want to initialize PostgreSQL instead of the default SQLite
+    if [ "${USE_POSTGRES:-false}" = "true" ]; then
+        setup_postgresql
+    fi
     activate_poetry_env
     install_dependencies_after_poetry_env
     run_alembic_upgrade

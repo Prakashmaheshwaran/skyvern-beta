@@ -26,7 +26,11 @@ def _status_table() -> Table:
     components = [
         ("API server", _check_port(api_port), "skyvern run server"),
         ("UI server", _check_port(ui_port), "skyvern run ui"),
-        ("PostgreSQL", _check_port(db_port), "skyvern init --no-postgres false"),
+        (
+            "PostgreSQL",
+            _check_port(db_port),
+            "skyvern init --no-postgres false",
+        ),
     ]
 
     table = Table(title="Skyvern Component Status")

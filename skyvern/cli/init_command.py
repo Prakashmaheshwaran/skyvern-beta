@@ -19,7 +19,7 @@ from .mcp import setup_local_organization, setup_mcp
 
 
 def init(
-    no_postgres: bool = typer.Option(False, "--no-postgres", help="Skip starting PostgreSQL container"),
+    no_postgres: bool = typer.Option(True, "--no-postgres", help="Skip starting PostgreSQL container"),
 ) -> None:
     """Interactive initialization command for Skyvern."""
     console.print(

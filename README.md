@@ -83,7 +83,7 @@ This quickstart guide will walk you through getting Skyvern up and running on yo
 1. **Install Skyvern**
 	```bash
 	pip install skyvern
-	```
+ ```
 
 2. **Configure Skyvern** Run the setup wizard which will guide you through the configuration process, including Skyvern [MCP](https://github.com/Skyvern-AI/skyvern/blob/main/integrations/mcp/README.md) integration. This will generate a `.env` as the configuration settings file.
 	```bash
@@ -133,12 +133,13 @@ This quickstart guide will walk you through getting Skyvern up and running on yo
   skyvern = Skyvern(base_url="http://localhost:8000", api_key="SKYVERN API KEY")
   task = await skyvern.agent.run_task(prompt="Find the top post on hackernews today")
   print(task)
-  ```
+ ```
 
 ## Docker Compose setup
 
 1. Make sure you have [Docker Desktop](https://www.docker.com/products/docker-desktop/) installed and running on your machine
-1. Make sure you don't have postgres running locally (Run `docker ps` to check)
+1. Make sure you don't have postgres running locally if you plan to use SQLite (Run `docker ps` to check)
+1. By default Skyvern uses SQLite. To use PostgreSQL update `DATABASE_STRING` in `docker-compose.yml` and `.env`
 1. Clone the repository and navigate to the root directory
 1. Fill in the LLM provider key on the [docker-compose.yml](./docker-compose.yml). *If you want to run Skyvern on a remote server, make sure you set the correct server ip for the UI container in [docker-compose.yml](./docker-compose.yml).*
 2. Run the following command via the commandline:
@@ -299,7 +300,7 @@ Before you begin, make sure you have the following installed:
 Note: Our setup script does these two for you, but they are here for reference.
 - [Python 3.11](https://www.python.org/downloads/)
     - `poetry env use 3.11`
-- [PostgreSQL 14](https://www.postgresql.org/download/) (if you're on a Mac, setup script will install it for you if you have homebrew installed)
+- [PostgreSQL 14](https://www.postgresql.org/download/) (optional, only required if you prefer Postgres over the default SQLite)
     - `brew install postgresql`
 
 ## Setup (Contributors)

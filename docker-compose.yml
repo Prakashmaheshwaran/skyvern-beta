@@ -35,7 +35,9 @@ services:
       # - ./skyvern:/app/skyvern
       # - ./alembic:/app/alembic
     environment:
-      - DATABASE_STRING=postgresql+psycopg://skyvern:skyvern@postgres:5432/skyvern
+      - DATABASE_STRING=sqlite+aiosqlite:///data/skyvern.db
+      # To use PostgreSQL instead of SQLite, set the following value:
+      # DATABASE_STRING=postgresql+psycopg://skyvern:skyvern@postgres:5432/skyvern
       - BROWSER_TYPE=chromium-headful
       - ENABLE_CODE_BLOCK=true
       # - BROWSER_TYPE=cdp-connect

@@ -218,6 +218,9 @@ class WorkflowModel(Base):
     persist_browser_session = Column(Boolean, default=False, nullable=False)
     model = Column(JSON, nullable=True)
     status = Column(String, nullable=False, default="published")
+    cron_schedule = Column(String, nullable=True)  # Cron expression for scheduled runs
+    cron_enabled = Column(Boolean, default=False, nullable=False)  # Whether the cron schedule is enabled
+    timezone = Column(String, default="UTC", nullable=False)  # Timezone for cron schedule
 
     created_at = Column(DateTime, default=datetime.datetime.utcnow, nullable=False)
     modified_at = Column(

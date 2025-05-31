@@ -459,11 +459,14 @@ export type WorkflowApiResponse = {
   deleted_at: string | null;
 };
 
-export type WorkflowSettings = {
+export interface WorkflowSettings {
   proxyLocation: ProxyLocation | null;
   webhookCallbackUrl: string | null;
   persistBrowserSession: boolean;
   model: WorkflowModel | null;
+  cronSchedule?: string | null;
+  cronEnabled?: boolean;
+  timezone?: string;
 };
 
 export type WorkflowModel = JsonObjectExtendable<{ model: string }>;

@@ -73,6 +73,8 @@ anthropic = "^0.50.0"
 google-cloud-aiplatform = "^1.90.0"
 alive-progress = "^3.2.0"
 colorama = "^0.4.6"
+croniter = ">=2.0.0"
+pytz = ">=2023.3"
 
 [tool.poetry.group.dev.dependencies]
 isort = "^5.13.2"

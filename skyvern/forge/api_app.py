@@ -19,6 +19,8 @@ from skyvern.forge.sdk.core import skyvern_context
 from skyvern.forge.sdk.core.skyvern_context import SkyvernContext
 from skyvern.forge.sdk.db.exceptions import NotFoundError
 from skyvern.forge.sdk.routes.routers import base_router, legacy_base_router, legacy_v2_router
+from skyvern.forge.sdk.routes.workflow_schedules import router as workflow_schedules_router
+from skyvern.forge.api_app_extensions import register_cron_service
 
 LOG = structlog.get_logger()
 
@@ -67,6 +69,10 @@ def get_agent_app() -> FastAPI:
     app.include_router(base_router, prefix="/v1")
     app.include_router(legacy_base_router, prefix="/api/v1")
     app.include_router(legacy_v2_router, prefix="/api/v2")
+    app.include_router(workflow_schedules_router)
+    
+    # Register cron service for scheduled workflow execution
+    register_cron_service(app)
     app.openapi = custom_openapi
 
     app.add_middleware(

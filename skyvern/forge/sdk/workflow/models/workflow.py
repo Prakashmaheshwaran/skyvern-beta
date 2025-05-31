@@ -77,6 +77,9 @@ class Workflow(BaseModel):
     persist_browser_session: bool = False
     model: dict[str, Any] | None = None
     status: WorkflowStatus = WorkflowStatus.published
+    cron_schedule: str | None = None
+    cron_enabled: bool = False
+    timezone: str = "UTC"
 
     created_at: datetime
     modified_at: datetime

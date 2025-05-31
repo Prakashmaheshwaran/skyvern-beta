@@ -83,6 +83,7 @@ class Settings(BaseSettings):
     # cron workflow settings
     ENABLE_CRON_WORKFLOWS: bool = False
     DEFAULT_CRON_TIMEZONE: str = "UTC"
+    CRON_WORKFLOW_REFRESH_INTERVAL_SECONDS: int = 5 * 60
 
     # Add extension folders name here to load extension in your browser
     EXTENSIONS_BASE_PATH: str = "./extensions"

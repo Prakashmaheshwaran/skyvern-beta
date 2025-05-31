@@ -5,6 +5,7 @@ import structlog
 from apscheduler.schedulers.asyncio import AsyncIOScheduler
 from apscheduler.triggers.cron import CronTrigger
 
+from skyvern.config import settings
 from skyvern.forge import app
 from skyvern.forge.sdk.schemas.organizations import Organization
 from skyvern.forge.sdk.workflow.models.workflow import Workflow, WorkflowRequestBody
@@ -14,8 +15,9 @@ LOG = structlog.get_logger(__name__)
 
 scheduler = AsyncIOScheduler()
 
+
 async def schedule_workflow(workflow: Workflow, organization: Organization) -> None:
-    """Schedule a workflow if it has a valid cron configuration."""
+    """Add a workflow to the scheduler if it has a cron schedule."""
 
     cron_schedule = getattr(workflow, "cron_schedule", None)
     if not cron_schedule:
@@ -56,6 +58,8 @@ async def schedule_workflow(workflow: Workflow, organization: Organization) -> N
     )
 
 async def load_workflows() -> None:
+    """Load all workflows from the database and schedule them."""
+
     organizations = await app.DATABASE.get_all_organizations()
     for organization in organizations:
         workflows = await app.WORKFLOW_SERVICE.get_workflows_by_organization_id(
@@ -65,8 +69,22 @@ async def load_workflows() -> None:
         for workflow in workflows:
             await schedule_workflow(workflow, organization)
 
+async def _poll_workflows(interval_seconds: int) -> None:
+    """Periodically reload workflows so schedule changes take effect."""
+
+    while True:
+        await asyncio.sleep(interval_seconds)
+        try:
+            await load_workflows()
+        except Exception:  # noqa: BLE001
+            LOG.exception("Failed to reload workflows")
+
+
 async def start_scheduler() -> None:
+    """Start the cron scheduler and refresh workflows periodically."""
+
     await load_workflows()
     scheduler.start()
+    asyncio.create_task(_poll_workflows(settings.CRON_WORKFLOW_REFRESH_INTERVAL_SECONDS))
     LOG.info("Cron trigger started successfully")
     await asyncio.Event().wait()

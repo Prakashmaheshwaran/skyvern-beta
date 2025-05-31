@@ -227,6 +227,9 @@ Start the scheduler alongside the API server with:
 skyvern run scheduler
 ```
 
+The scheduler automatically reloads workflows every five minutes, so new or
+updated schedules are picked up without restarting.
+
 
 # How it works
 Skyvern was inspired by the Task-Driven autonomous agent design popularized by [BabyAGI](https://github.com/yoheinakajima/babyagi) and [AutoGPT](https://github.com/Significant-Gravitas/AutoGPT) -- with one major bonus: we give Skyvern the ability to interact with websites using browser automation libraries like [Playwright](https://playwright.dev/).

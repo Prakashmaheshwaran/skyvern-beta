@@ -15,11 +15,38 @@ LOG = structlog.get_logger(__name__)
 scheduler = AsyncIOScheduler()
 
 async def schedule_workflow(workflow: Workflow, organization: Organization) -> None:
+    """Schedule a workflow if it has a valid cron configuration."""
+
     cron_schedule = getattr(workflow, "cron_schedule", None)
     if not cron_schedule:
         return
-    timezone = getattr(workflow, "cron_timezone", "UTC")
-    trigger = CronTrigger.from_crontab(cron_schedule, timezone=ZoneInfo(timezone))
+
+    timezone_str = getattr(workflow, "cron_timezone", "UTC")
+    try:
+        tzinfo = ZoneInfo(timezone_str)
+    except Exception as exc:  # pragma: no cover - defensive
+        LOG.error(
+            "Invalid timezone for cron schedule",
+            timezone=timezone_str,
+            workflow_permanent_id=workflow.workflow_permanent_id,
+            organization_id=organization.organization_id,
+            exc_info=exc,
+        )
+        return
+
+    try:
+        trigger = CronTrigger.from_crontab(cron_schedule, timezone=tzinfo)
+    except Exception as exc:  # pragma: no cover - defensive
+        LOG.error(
+            "Invalid cron schedule",
+            cron_schedule=cron_schedule,
+            timezone=timezone_str,
+            workflow_permanent_id=workflow.workflow_permanent_id,
+            organization_id=organization.organization_id,
+            exc_info=exc,
+        )
+        return
+
     scheduler.add_job(
         workflow_service.run_workflow,
         trigger=trigger,

@@ -16,6 +16,7 @@ from rich.prompt import Confirm
 from skyvern.cli.utils import start_services
 from skyvern.config import settings
 from skyvern.library.skyvern import Skyvern
+from skyvern.services.cron_scheduler import start_scheduler
 from skyvern.utils import detect_os
 
 from .console import console
@@ -159,6 +160,20 @@ def run_ui() -> None:
 def run_all() -> None:
     """Run the Skyvern API server and UI server in parallel."""
     asyncio.run(start_services())
+
+
+@run_app.command(name="scheduler")
+def run_scheduler() -> None:
+    """Run the cron scheduler."""
+    console.print(
+        Panel(
+            "[bold green]Starting Skyvern Cron Scheduler...[/bold green]",
+            border_style="green",
+        )
+    )
+    load_dotenv()
+    load_dotenv(".env")
+    asyncio.run(start_scheduler())
 
 
 @run_app.command(name="mcp")
